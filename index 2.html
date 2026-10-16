@@ -1,0 +1,571 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Crousty Bowl Rewards</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Cairo:wght@500;700;800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+/* Layout: one narrow column on black, built around a bright orange ticket-shaped stamp card with black stamps; staff controls sit underneath. Single dark look on purpose. */
+:root {
+  color-scheme: dark;
+  --bg: #0E0C0A;
+  --surface: #181512;
+  --ink: #F6EFE8;
+  --muted: #A99D92;
+  --line: #342E28;
+  --accent: #FF6A00;
+  --accent-ink: #140A02;
+  --focus: #FF8A33;
+  --warn: #FF9A8A;
+  --card: #FF6A00;
+  --card-fg: #140A02;
+  --card-dim: #4A2300;
+  --card-line: #6B2F00;
+  --stamp: #140A02;
+  --stamp-ink: #FF6A00;
+  --font-display: 'Bricolage Grotesque', 'Segoe UI', system-ui, sans-serif;
+  --font-body: 'Instrument Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+}
+:root:lang(ar) {
+  --font-display: 'Cairo', 'Segoe UI', Tahoma, system-ui, sans-serif;
+  --font-body: 'Cairo', 'Segoe UI', Tahoma, system-ui, sans-serif;
+  --font-mono: 'Cairo', 'Segoe UI', Tahoma, system-ui, sans-serif;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+  padding-block: 28px 40px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+:root:lang(ar) body { line-height: 1.65; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+.wrap { max-width: 460px; margin-inline: auto; display: flex; flex-direction: column; gap: 28px; }
+.topbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 14px; }
+.eyebrow { font: 500 11px var(--font-mono); text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted); margin: 0; }
+h1 { font: 800 clamp(2.2rem, 11vw, 3rem)/1 var(--font-display); letter-spacing: -0.025em; text-wrap: balance; margin: 0; }
+.sub { color: var(--muted); margin: 10px 0 0; max-width: 36ch; }
+
+/* Language switch */
+.lang { display: inline-flex; direction: ltr; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; flex-shrink: 0; }
+.lang button { min-height: 40px; min-width: 44px; padding: 0 12px; background: transparent; color: var(--muted); border: 0; font: 600 0.875rem var(--font-body); cursor: pointer; }
+.lang button[lang="ar"] { font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif; }
+.lang button + button { border-left: 1px solid var(--line); }
+.lang button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+
+/* Card */
+.card { background: var(--card); color: var(--card-fg); border-radius: 18px; position: relative; overflow: hidden; }
+.card-top { padding: 20px 20px 18px; display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; }
+.holder-wrap { flex: 1; min-width: 0; }
+.holder-wrap label { display: block; font: 500 10.5px var(--font-mono); text-transform: uppercase; letter-spacing: 0.14em; color: var(--card-dim); }
+#holder { width: 100%; background: transparent; border: 0; border-bottom: 1.5px solid var(--card-line); border-radius: 0; color: var(--card-fg); font: 700 1.3rem/1.4 var(--font-display); padding: 4px 0; }
+#holder::placeholder { color: var(--card-dim); font-weight: 500; }
+#holder:focus-visible { outline: 2px solid var(--stamp); outline-offset: 4px; }
+.number { font: 500 12px var(--font-mono); color: var(--card-dim); white-space: nowrap; padding-bottom: 6px; }
+.perf { position: relative; height: 0; border-top: 2px dashed var(--card-line); margin: 0 22px; }
+.perf::before, .perf::after { content: ""; position: absolute; top: -12px; width: 22px; height: 22px; border-radius: 50%; background: var(--bg); }
+.perf::before { left: -33px; }
+.perf::after { right: -33px; }
+
+.slots { list-style: none; margin: 0; padding: 22px 20px 20px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; container-type: inline-size; }
+.slot { aspect-ratio: 1; border-radius: 50%; display: grid; place-items: center; position: relative; border: 1.5px dashed var(--card-line); color: var(--card-dim); font: 500 11px var(--font-mono); font-variant-numeric: tabular-nums; }
+.slot.on { background: var(--stamp); border-color: transparent; color: var(--stamp-ink); font: 800 clamp(18px, 7cqw, 30px)/1 var(--font-display); transform: rotate(var(--r, 0deg)); }
+.slot.on::after { content: ""; position: absolute; inset: 12%; border-radius: 50%; border: 1.5px solid currentColor; opacity: 0.45; }
+.slot.reward { border: 1.5px solid var(--stamp); color: var(--stamp); font: 700 11px var(--font-mono); letter-spacing: 0.04em; }
+.slot.reward.on { background: var(--stamp); color: var(--stamp-ink); font: 700 11px var(--font-mono); letter-spacing: 0.04em; transform: none; }
+.slot.reward.on::after { display: none; }
+.slot.just { animation: press 0.38s cubic-bezier(0.2, 0.9, 0.3, 1.25); }
+@keyframes press {
+  from { transform: rotate(var(--r, 0deg)) scale(1.9); opacity: 0; }
+  to { transform: rotate(var(--r, 0deg)) scale(1); opacity: 1; }
+}
+@media (max-width: 380px) {
+  .slot.reward, .slot.reward.on { font-size: 9.5px; }
+}
+
+.card-foot { padding: 0 20px 20px; display: flex; flex-direction: column; gap: 6px; }
+.progress { font: 700 1.1rem/1.3 var(--font-display); margin: 0; text-wrap: balance; }
+.progress.ready { background: var(--stamp); color: var(--stamp-ink); padding: 12px 14px; border-radius: 12px; }
+.last { color: var(--card-dim); font-size: 0.875rem; margin: 0; font-weight: 500; }
+
+/* Staff */
+.staff { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+.staff summary { padding: 14px 16px; cursor: pointer; font-weight: 600; list-style: none; display: flex; justify-content: space-between; align-items: center; border-radius: 12px; }
+.staff summary::-webkit-details-marker { display: none; }
+.staff summary::after { content: "+"; font: 500 1.25rem var(--font-mono); color: var(--muted); }
+.staff[open] summary::after { content: "\2212"; }
+.staff-body { padding: 0 16px 16px; display: grid; gap: 12px; }
+.staff-body p { margin: 0; color: var(--muted); font-size: 0.9375rem; }
+.staff-body label { font-weight: 600; font-size: 0.9375rem; }
+#pin { width: 100%; padding: 12px 14px; font: 500 1.125rem var(--font-mono); letter-spacing: 0.3em; background: var(--bg); color: var(--ink); border: 1px solid var(--line); border-radius: 10px; margin-top: 6px; }
+.btns { display: flex; flex-wrap: wrap; gap: 8px; }
+.btn { min-height: 44px; padding: 0 16px; border-radius: 10px; border: 1px solid var(--line); background: transparent; color: var(--ink); font: 600 0.9375rem var(--font-body); cursor: pointer; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+#msg { min-height: 1.5em; font-size: 0.9375rem; color: var(--muted); margin: 0; }
+#msg.err { color: var(--warn); }
+
+/* Info */
+.how h2 { font: 700 1.15rem var(--font-display); margin: 0 0 8px; }
+.how ul { list-style: none; margin: 0; padding: 0; }
+.how li { padding: 11px 0; border-top: 1px solid var(--line); font-size: 0.9375rem; }
+.fine { color: var(--muted); font-size: 0.8125rem; margin: 0; max-width: 50ch; }
+
+/* Arabic: no letter-spacing or capitals, which would break the joined letters */
+:root:lang(ar) .eyebrow,
+:root:lang(ar) .holder-wrap label,
+:root:lang(ar) .number,
+:root:lang(ar) .slot.reward,
+:root:lang(ar) .slot.reward.on { letter-spacing: 0; text-transform: none; }
+:root:lang(ar) .eyebrow,
+:root:lang(ar) .holder-wrap label,
+:root:lang(ar) .number { font-size: 12.5px; }
+:root:lang(ar) .slot.reward,
+:root:lang(ar) .slot.reward.on { font-size: 13px; }
+:root:lang(ar) .progress { line-height: 1.5; }
+
+@media (prefers-reduced-motion: reduce) {
+  .slot.just { animation: none; }
+}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header>
+    <div class="topbar">
+      <p class="eyebrow" data-i18n="eyebrow">Loyalty card</p>
+      <div class="lang" role="group" aria-label="Language / Langue / اللغة">
+        <button type="button" data-lang="fr" lang="fr" aria-pressed="false">FR</button>
+        <button type="button" data-lang="en" lang="en" aria-pressed="false">EN</button>
+        <button type="button" data-lang="ar" lang="ar" aria-pressed="false">عربي</button>
+      </div>
+    </div>
+    <h1 id="name">Crousty Bowl</h1>
+    <p class="sub" id="sub"></p>
+  </header>
+
+  <section class="card" data-i18n-aria="cardLabel" aria-label="Your stamp card">
+    <div class="card-top">
+      <div class="holder-wrap">
+        <label for="holder" data-i18n="holderLabel">Name on card</label>
+        <input id="holder" type="text" maxlength="28" dir="auto" data-i18n-ph="holderPh" placeholder="Your name" autocomplete="name">
+      </div>
+      <div class="number" id="number"></div>
+    </div>
+    <div class="perf" aria-hidden="true"></div>
+    <ul class="slots" id="slots"></ul>
+    <div class="card-foot" aria-live="polite">
+      <p class="progress" id="progress"></p>
+      <p class="last" id="last"></p>
+    </div>
+  </section>
+
+  <details class="staff" id="staff">
+    <summary data-i18n="staffTitle">Staff only</summary>
+    <form class="staff-body" id="staff-form" autocomplete="off">
+      <p data-i18n="staffIntro">Enter the staff PIN, then choose what to do with this card.</p>
+      <div>
+        <label for="pin" data-i18n="pinLabel">Staff PIN</label>
+        <input id="pin" type="password" inputmode="numeric" dir="ltr" maxlength="8" placeholder="••••">
+      </div>
+      <div class="btns">
+        <button class="btn primary" type="submit" id="add" data-i18n="add">Add stamp</button>
+        <button class="btn" type="button" id="redeem" data-i18n="redeem">Redeem reward</button>
+        <button class="btn" type="button" id="undo" data-i18n="undo">Remove last stamp</button>
+      </div>
+      <p id="msg" role="status"></p>
+    </form>
+  </details>
+
+  <section class="how">
+    <h2 data-i18n="howTitle">How it works</h2>
+    <ul id="how"></ul>
+  </section>
+
+  <p class="fine" data-i18n="fine"></p>
+</main>
+
+<script>
+(function () {
+  var CONFIG = { name: "Crousty Bowl", visits: 9 };
+  var PIN_SALT = "cb-7f31a:";
+  var PIN_HASH = "426856941c00eb902f305d67dc4fd22575f9b9c7d080bbb6f0417ae97cce577f";
+  var MAX_TRIES = 3;
+  var LOCK_MS = 30000;
+  var LOCK_KEY = "crousty-bowl-lock";
+  var KEY = "crousty-bowl-card-v1";
+  var LANG_KEY = "crousty-bowl-lang";
+  var ROT = [-6, 4, -3, 7, -5, 3, -7, 5, -2];
+  var LOCALE = { en: "en-GB", fr: "fr-FR", ar: "ar-DZ-u-nu-latn" };
+
+  var T = {
+    en: {
+      eyebrow: "Loyalty card",
+      sub: function (v) { return v + " stamps, then a free meal. Show this page when you pay."; },
+      cardLabel: "Your stamp card",
+      holderLabel: "Name on card",
+      holderPh: "Your name",
+      no: "No.",
+      free: "FREE",
+      stampAria: function (i, d) { return "Stamp " + i + ", collected " + d; },
+      emptyAria: function (i) { return "Stamp " + i + ", empty"; },
+      rewardAria: function (ready) { return ready ? "Reward earned: a free meal" : "Reward: a free meal"; },
+      progressEmpty: function (v) { return "Collect " + v + " stamps and get a free meal."; },
+      progress: function (n, v, left) { return n + " of " + v + " stamps. " + left + (left === 1 ? " more visit" : " more visits") + " until your free meal."; },
+      ready: "Your free meal is ready. Show this card to your server.",
+      lastStamp: function (d) { return "Last stamp " + d; },
+      rewardsEarned: function (n) { return "Rewards earned: " + n; },
+      staffTitle: "Staff only",
+      staffIntro: "Enter the staff PIN, then choose what to do with this card.",
+      pinLabel: "Staff PIN",
+      add: "Add stamp",
+      redeem: "Redeem reward",
+      undo: "Remove last stamp",
+      badPin: "That PIN is not right. Ask the manager for the staff PIN.",
+      locked: "Too many wrong tries. Please wait a moment.",
+      noCrypto: "This browser cannot check the PIN. Open the page in Chrome or Safari.",
+      full: "This card is full. Redeem the reward first.",
+      addedLeft: function (n) { return "Stamp added. " + n + " to go."; },
+      addedReady: "Stamp added. The free meal is ready.",
+      notReady: "Not ready yet. This card needs more stamps.",
+      redeemed: "Reward redeemed. A new card has started.",
+      noStamp: "There is no stamp to remove.",
+      removed: "Last stamp removed.",
+      howTitle: "How it works",
+      how: function (v) {
+        return [
+          "Show this page to your server when you pay.",
+          "Your server adds a stamp for every visit.",
+          "At " + v + " stamps, your next visit comes with a free meal."
+        ];
+      },
+      fine: "Your stamps are saved on this phone. Bookmark this page and open it in the same browser each visit. One stamp per visit. Rewards have no cash value."
+    },
+    fr: {
+      eyebrow: "Carte de fidélité",
+      sub: function (v) { return v + " tampons, puis un repas offert. Présentez cette page au moment de payer."; },
+      cardLabel: "Votre carte de tampons",
+      holderLabel: "Nom sur la carte",
+      holderPh: "Votre nom",
+      no: "N°",
+      free: "OFFERT",
+      stampAria: function (i, d) { return "Tampon " + i + ", obtenu le " + d; },
+      emptyAria: function (i) { return "Tampon " + i + ", vide"; },
+      rewardAria: function (ready) { return ready ? "Récompense gagnée : un repas offert" : "Récompense : un repas offert"; },
+      progressEmpty: function (v) { return "Collectez " + v + " tampons et recevez un repas offert."; },
+      progress: function (n, v, left) { return n + (n === 1 ? " tampon" : " tampons") + " sur " + v + ". Encore " + left + (left === 1 ? " visite" : " visites") + " avant votre repas offert."; },
+      ready: "Votre repas offert est prêt. Montrez cette carte au serveur.",
+      lastStamp: function (d) { return "Dernier tampon le " + d; },
+      rewardsEarned: function (n) { return "Récompenses obtenues : " + n; },
+      staffTitle: "Réservé au personnel",
+      staffIntro: "Saisissez le code du personnel, puis choisissez une action pour cette carte.",
+      pinLabel: "Code du personnel",
+      add: "Ajouter un tampon",
+      redeem: "Utiliser la récompense",
+      undo: "Retirer le dernier tampon",
+      badPin: "Ce code est incorrect. Demandez le code au responsable.",
+      locked: "Trop de codes incorrects. Patientez un instant.",
+      noCrypto: "Ce navigateur ne peut pas vérifier le code. Ouvrez la page dans Chrome ou Safari.",
+      full: "La carte est complète. Utilisez d'abord la récompense.",
+      addedLeft: function (n) { return "Tampon ajouté. Encore " + n + "."; },
+      addedReady: "Tampon ajouté. Le repas offert est prêt.",
+      notReady: "Pas encore prête. Il manque des tampons.",
+      redeemed: "Récompense utilisée. Une nouvelle carte commence.",
+      noStamp: "Aucun tampon à retirer.",
+      removed: "Dernier tampon retiré.",
+      howTitle: "Comment ça marche",
+      how: function (v) {
+        return [
+          "Présentez cette page au serveur au moment de payer.",
+          "Le serveur ajoute un tampon à chaque visite.",
+          "À " + v + " tampons, votre visite suivante vient avec un repas offert."
+        ];
+      },
+      fine: "Vos tampons sont enregistrés sur ce téléphone. Ajoutez cette page à vos favoris et ouvrez-la dans le même navigateur à chaque visite. Un tampon par visite. Les récompenses n'ont pas de valeur en espèces."
+    },
+    ar: {
+      eyebrow: "بطاقة الولاء",
+      sub: function (v) { return "اجمع " + v + " طوابع واحصل على وجبة مجانية. اعرض هذه الصفحة عند الدفع."; },
+      cardLabel: "بطاقة الطوابع الخاصة بك",
+      holderLabel: "الاسم على البطاقة",
+      holderPh: "اسمك",
+      no: "رقم",
+      free: "مجاني",
+      stampAria: function (i, d) { return "الطابع " + i + "، تم الحصول عليه في " + d; },
+      emptyAria: function (i) { return "الطابع " + i + "، فارغ"; },
+      rewardAria: function (ready) { return ready ? "المكافأة محصّلة: وجبة مجانية" : "المكافأة: وجبة مجانية"; },
+      progressEmpty: function (v) { return "اجمع " + v + " طوابع واحصل على وجبة مجانية."; },
+      progress: function (n, v, left) {
+        var rest = left === 1 ? "تبقّت زيارة واحدة" : left === 2 ? "تبقّت زيارتان" : "تبقّت " + left + " زيارات";
+        return n + " من أصل " + v + " طوابع. " + rest + " للحصول على وجبتك المجانية.";
+      },
+      ready: "وجبتك المجانية جاهزة. أرِ هذه البطاقة للنادل.",
+      lastStamp: function (d) { return "آخر طابع في " + d; },
+      rewardsEarned: function (n) { return "المكافآت المحصّلة: " + n; },
+      staffTitle: "للموظفين فقط",
+      staffIntro: "أدخل الرمز السري للموظفين ثم اختر ما تريد فعله بهذه البطاقة.",
+      pinLabel: "الرمز السري للموظفين",
+      add: "إضافة طابع",
+      redeem: "صرف المكافأة",
+      undo: "حذف آخر طابع",
+      badPin: "الرمز السري غير صحيح. اطلب الرمز من المسؤول.",
+      locked: "محاولات خاطئة كثيرة. انتظر قليلًا ثم أعد المحاولة.",
+      noCrypto: "لا يستطيع هذا المتصفح التحقق من الرمز. افتح الصفحة في Chrome أو Safari.",
+      full: "البطاقة ممتلئة. اصرف المكافأة أولاً.",
+      addedLeft: function (n) {
+        return n === 1 ? "تمت إضافة الطابع. تبقّى طابع واحد." : n === 2 ? "تمت إضافة الطابع. تبقّى طابعان." : "تمت إضافة الطابع. تبقّت " + n + " طوابع.";
+      },
+      addedReady: "تمت إضافة الطابع. الوجبة المجانية جاهزة.",
+      notReady: "البطاقة ليست جاهزة بعد. تحتاج إلى مزيد من الطوابع.",
+      redeemed: "تم صرف المكافأة. بدأت بطاقة جديدة.",
+      noStamp: "لا يوجد طابع لحذفه.",
+      removed: "تم حذف آخر طابع.",
+      howTitle: "كيف تعمل البطاقة",
+      how: function (v) {
+        return [
+          "اعرض هذه الصفحة على النادل عند الدفع.",
+          "يضيف النادل طابعًا في كل زيارة.",
+          "عند جمع " + v + " طوابع، تأتي زيارتك التالية مع وجبة مجانية."
+        ];
+      },
+      fine: "طوابعك محفوظة على هذا الهاتف. أضف هذه الصفحة إلى المفضلة وافتحها في المتصفح نفسه في كل زيارة. طابع واحد لكل زيارة. المكافآت ليس لها قيمة نقدية."
+    }
+  };
+
+  function fresh() {
+    return { holder: "", number: String(Math.floor(100000 + Math.random() * 900000)), stamps: [], rewards: 0 };
+  }
+  function load() {
+    try {
+      var raw = localStorage.getItem(KEY);
+      if (raw) {
+        var s = JSON.parse(raw);
+        if (s && Array.isArray(s.stamps)) {
+          s.holder = typeof s.holder === "string" ? s.holder : "";
+          s.number = typeof s.number === "string" ? s.number : fresh().number;
+          s.rewards = Number(s.rewards) || 0;
+          return s;
+        }
+      }
+    } catch (e) {}
+    return fresh();
+  }
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {}
+  }
+  function detectLang() {
+    try {
+      var s = localStorage.getItem(LANG_KEY);
+      if (s && T[s]) return s;
+    } catch (e) {}
+    var nav = String(navigator.language || "fr").slice(0, 2).toLowerCase();
+    return T[nav] ? nav : "fr";
+  }
+
+  var state = load();
+  var lang = detectLang();
+  var justIndex = -1;
+  var initial = CONFIG.name.trim().charAt(0).toUpperCase();
+
+  var $ = function (id) { return document.getElementById(id); };
+  var slotsEl = $("slots"), pin = $("pin"), msg = $("msg");
+  function s() { return T[lang]; }
+
+  function fmt(iso) {
+    try { return new Date(iso).toLocaleDateString(LOCALE[lang], { day: "numeric", month: "short" }); }
+    catch (e) { return String(iso).slice(0, 10); }
+  }
+  function say(text, isErr) {
+    msg.textContent = text;
+    msg.className = isErr ? "err" : "";
+  }
+  var fails = 0, locked = false, lockTimer = null;
+
+  function saveLock(until) {
+    try { localStorage.setItem(LOCK_KEY, JSON.stringify({ fails: fails, until: until || 0 })); } catch (e) {}
+  }
+  function startLock(ms) {
+    locked = true;
+    saveLock(Date.now() + ms);
+    render();
+    say(s().locked, true);
+    clearTimeout(lockTimer);
+    lockTimer = setTimeout(function () {
+      locked = false;
+      fails = 0;
+      saveLock(0);
+      render();
+      say("", false);
+    }, ms);
+  }
+  function restoreLock() {
+    try {
+      var raw = localStorage.getItem(LOCK_KEY);
+      if (!raw) return;
+      var o = JSON.parse(raw);
+      fails = Number(o.fails) || 0;
+      var left = Number(o.until) - Date.now();
+      if (left > 0) startLock(left);
+    } catch (e) {}
+  }
+  function sha256hex(text) {
+    var data = new TextEncoder().encode(text);
+    return crypto.subtle.digest("SHA-256", data).then(function (buf) {
+      return Array.prototype.map.call(new Uint8Array(buf), function (b) { return ("0" + b.toString(16)).slice(-2); }).join("");
+    });
+  }
+  function checkPin() {
+    var typed = pin.value;
+    pin.value = "";
+    if (locked) return Promise.resolve(false);
+    var job;
+    try { job = sha256hex(PIN_SALT + typed); }
+    catch (e) { say(s().noCrypto, true); return Promise.resolve(false); }
+    return job.then(function (h) {
+      if (h === PIN_HASH) { fails = 0; saveLock(0); return true; }
+      fails += 1;
+      if (fails >= MAX_TRIES) { fails = 0; startLock(LOCK_MS); }
+      else { saveLock(0); say(s().badPin, true); }
+      return false;
+    }, function () { say(s().noCrypto, true); return false; });
+  }
+
+  function each(list, fn) { Array.prototype.forEach.call(list, fn); }
+
+  function applyStatic() {
+    var str = s();
+    each(document.querySelectorAll("[data-i18n]"), function (el) { el.textContent = str[el.getAttribute("data-i18n")]; });
+    each(document.querySelectorAll("[data-i18n-ph]"), function (el) { el.setAttribute("placeholder", str[el.getAttribute("data-i18n-ph")]); });
+    each(document.querySelectorAll("[data-i18n-aria]"), function (el) { el.setAttribute("aria-label", str[el.getAttribute("data-i18n-aria")]); });
+    $("sub").textContent = str.sub(CONFIG.visits);
+    var how = $("how");
+    how.textContent = "";
+    str.how(CONFIG.visits).forEach(function (line) {
+      var li = document.createElement("li");
+      li.textContent = line;
+      how.appendChild(li);
+    });
+  }
+
+  function render() {
+    var str = s();
+    var n = state.stamps.length, v = CONFIG.visits, left = Math.max(0, v - n), ready = n >= v;
+
+    slotsEl.textContent = "";
+    for (var i = 0; i < v; i++) {
+      var li = document.createElement("li");
+      var on = i < n;
+      li.className = "slot" + (on ? " on" : "") + (i === justIndex ? " just" : "");
+      if (on) {
+        li.style.setProperty("--r", ROT[i % ROT.length] + "deg");
+        li.textContent = initial;
+        li.setAttribute("aria-label", str.stampAria(i + 1, fmt(state.stamps[i])));
+      } else {
+        li.textContent = String(i + 1);
+        li.setAttribute("aria-label", str.emptyAria(i + 1));
+      }
+      slotsEl.appendChild(li);
+    }
+    var r = document.createElement("li");
+    r.className = "slot reward" + (ready ? " on" : "");
+    r.textContent = str.free;
+    r.setAttribute("aria-label", str.rewardAria(ready));
+    slotsEl.appendChild(r);
+    justIndex = -1;
+
+    var p = $("progress");
+    if (ready) {
+      p.className = "progress ready";
+      p.textContent = str.ready;
+    } else {
+      p.className = "progress";
+      p.textContent = n === 0 ? str.progressEmpty(v) : str.progress(n, v, left);
+    }
+
+    var parts = [];
+    if (n > 0) parts.push(str.lastStamp(fmt(state.stamps[n - 1])));
+    if (state.rewards > 0) parts.push(str.rewardsEarned(state.rewards));
+    $("last").textContent = parts.join(" · ");
+
+    $("number").textContent = str.no + " " + state.number.slice(0, 3) + " " + state.number.slice(3);
+    $("add").disabled = ready || locked;
+    $("redeem").disabled = !ready || locked;
+    $("undo").disabled = n === 0 || locked;
+    pin.disabled = locked;
+  }
+
+  function setLang(l, persist) {
+    lang = l;
+    if (persist) { try { localStorage.setItem(LANG_KEY, l); } catch (e) {} }
+    document.documentElement.lang = l;
+    document.documentElement.dir = l === "ar" ? "rtl" : "ltr";
+    each(document.querySelectorAll(".lang button"), function (b) {
+      b.setAttribute("aria-pressed", b.getAttribute("data-lang") === l ? "true" : "false");
+    });
+    applyStatic();
+    render();
+    if (locked) say(s().locked, true); else say("", false);
+  }
+
+  $("name").textContent = CONFIG.name;
+  $("holder").value = state.holder;
+  $("holder").addEventListener("input", function (e) {
+    state.holder = e.target.value.slice(0, 28);
+    save();
+  });
+
+  each(document.querySelectorAll(".lang button"), function (b) {
+    b.addEventListener("click", function () { setLang(b.getAttribute("data-lang"), true); });
+  });
+
+  $("staff-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    checkPin().then(function (ok) {
+      if (!ok) return;
+      if (state.stamps.length >= CONFIG.visits) { say(s().full, true); return; }
+      state.stamps.push(new Date().toISOString());
+      justIndex = state.stamps.length - 1;
+      save();
+      render();
+      var left = CONFIG.visits - state.stamps.length;
+      say(left === 0 ? s().addedReady : s().addedLeft(left), false);
+    });
+  });
+  $("redeem").addEventListener("click", function () {
+    checkPin().then(function (ok) {
+      if (!ok) return;
+      if (state.stamps.length < CONFIG.visits) { say(s().notReady, true); return; }
+      state.rewards += 1;
+      state.stamps = [];
+      save();
+      render();
+      say(s().redeemed, false);
+    });
+  });
+  $("undo").addEventListener("click", function () {
+    checkPin().then(function (ok) {
+      if (!ok) return;
+      if (state.stamps.length === 0) { say(s().noStamp, true); return; }
+      state.stamps.pop();
+      save();
+      render();
+      say(s().removed, false);
+    });
+  });
+
+  restoreLock();
+  setLang(lang, false);
+})();
+</script>
+</body>
+</html>
